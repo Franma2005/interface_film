@@ -30,6 +30,13 @@ export class FilmAdapter {
                 break;
         }
 
+        /**
+         * * Comentario explicativo:
+         * El otro día al final de clase estabamos confusos porque no sabiamos que tipo de valor era movie. Explicacioón
+         * 1) httpRequest.getFilms(route); devuelve una Promesa
+         * 2) Gracias al await esperamos a que se resuelva la promesa. Caso positivo retorna MoviesResponse, caso negativo lanza una excepcion rejected
+         * 3) Finalmente a la hora de devolver el valor el método al ser async envolverá en una promesa a dataMovies
+         */
         const movies = await httpRequest.getFilms(route);
         const dataMovies = movies.results.map((item: Result) => movieMapper(item));
         return dataMovies;
