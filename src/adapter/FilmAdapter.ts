@@ -37,8 +37,15 @@ export class FilmAdapter {
          * 2) Gracias al await esperamos a que se resuelva la promesa. Caso positivo retorna MoviesResponse, caso negativo lanza una excepcion rejected
          * 3) Finalmente a la hora de devolver el valor el método al ser async envolverá en una promesa a dataMovies
          */
-        const movies = await httpRequest.getFilms(route);
-        const dataMovies = movies.results.map((item: Result) => movieMapper(item));
+        let dataMovies: Movie[] = [];
+
+        try{
+            const movies = await httpRequest.getFilms(route);
+            dataMovies = movies.results.map((item: Result) => movieMapper(item));
+        } catch(exception) {
+            console.log(exception);
+        }
+        
         return dataMovies;
     }
 }
