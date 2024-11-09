@@ -3,6 +3,8 @@ import { movieMapper } from "../config/mapper/movieMapper";
 import { Result } from "../config/Responses/dataMovies";
 import { HttpFetch } from "./http/HttpFetch";
 import { HttpAxios } from "./http/HttpAxios";
+import { urlRequest } from "../config/Config";
+import { Route } from "@react-navigation/native";
 
 export class FilmAdapter {
 
@@ -11,12 +13,23 @@ export class FilmAdapter {
         "popular": "/popular",
     }
 
-    static async getNowPlaying(route:string) : Promise<Movie[]> {
-        //const httpFetch = new HttpFetch({url: "https://api.themoviedb.org/3/movie", key: "c76ed6d50b96d2bfc0920abaeade0be3"});
-        //const movies =  await httpFetch.getFilms(route);
-        const httpAxios = new HttpAxios(({url: "https://api.themoviedb.org/3/movie", key: "c76ed6d50b96d2bfc0920abaeade0be3"}));
-        const movies =  await httpAxios.getFilms(route);
-        const dataMovies =  movies.results.map((item : Result ) => movieMapper(item));
+    static async getNowPlaying(route: string): Promise<Movie[]> {
+        let httpRequest;
+
+        switch (urlRequest.tool) {
+            case "axios":
+                httpRequest = new HttpAxios(({ url: urlRequest.url, key: urlRequest.key }));
+                break;
+            case "fetch":
+                httpRequest = new HttpFetch(({ url: urlRequest.url, key: urlRequest.key }));
+                break;
+            default:
+                httpRequest = new HttpFetch(({ url: urlRequest.url, key: urlRequest.key }));
+                break;
+        }
+
+        const movies = await httpRequest.getFilms(route);
+        const dataMovies = movies.results.map((item: Result) => movieMapper(item));
         return dataMovies;
     }
 }
