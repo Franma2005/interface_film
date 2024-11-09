@@ -14,6 +14,8 @@ export class FilmAdapter {
     }
 
     static async getNowPlaying(route: string): Promise<Movie[]> {
+        if(!Reflect.has(FilmAdapter.ROUTES, route)) route = FilmAdapter.ROUTES.popular;
+        
         let httpRequest;
 
         switch (urlRequest.tool) {
